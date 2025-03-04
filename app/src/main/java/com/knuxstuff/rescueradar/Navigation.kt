@@ -24,6 +24,9 @@ sealed class Screen(val route: String) { //list of all possible screens, and the
     @Serializable
     data object History: Screen("history")
 
+    @Serializable
+    data object Settings: Screen("settings")
+
 } //I LOVE KOTLIN SOOOO MUCH /s
 //Why isn't this an enum? What is the obsession with adding unnecessary complexity? I DONT KNOW.
 
@@ -36,7 +39,7 @@ fun NavStack(navController: NavHostController) {
             composable<Screen.Map> { MapScreen( /* ... */ ) }
             composable<Screen.Report> { ReportScreen( /* ... */ ) }
             composable<Screen.History> { HistoryScreen( /* ... */ ) }
-
+            composable<Screen.Settings> { SettingsScreen(/* ... */ ) }
             // Add more destinations eventually...
         }
     }
