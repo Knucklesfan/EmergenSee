@@ -1,5 +1,7 @@
 package com.knuxstuff.rescueradar
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.Icon
 import android.util.Log
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -11,15 +13,25 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +50,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun NavBar(navigation: NavController, cont: @Composable () -> Unit): Unit {
@@ -168,4 +183,96 @@ fun NavBar(navigation: NavController, cont: @Composable () -> Unit): Unit {
             }
         }
     )
+}
+//initializing the data class with default parameters
+data class navItem(
+    val label : String = "",
+    val icon : ImageVector = Icons.Filled.Home,
+    val route : Screen
+) {
+
+    //function to get the list of bottomNavigationItems
+}
+@Composable
+fun bottomNavigationItems() : List<navItem> {
+    return listOf(
+        navItem(
+            label = stringResource(R.string.emergency_drawer),
+            icon = ImageVector.vectorResource(R.drawable.emergency),
+            route = Screen.Emergency
+        ),
+        navItem(
+            label = stringResource(R.string.heatmap_drawer),
+            icon = ImageVector.vectorResource(R.drawable.map),
+            route = Screen.Map
+        ),
+        navItem(
+            label = stringResource(R.string.report_drawer),
+            icon = ImageVector.vectorResource(R.drawable.flag),
+            route = Screen.Report
+        ),
+        navItem(
+            label = stringResource(R.string.history_drawer),
+            icon = ImageVector.vectorResource(R.drawable.history),
+            route = Screen.History
+        ),
+        navItem(
+            label = stringResource(R.string.settings_drawer),
+            icon = ImageVector.vectorResource(R.drawable.accounts),
+            route = Screen.Settings
+        ),
+
+        )
+}
+
+@Composable
+fun BottomNavBar(navigation: NavController, cont: @Composable () -> Unit) {
+//initializing the default selected item
+    var navigationSelectedItem by remember {
+        mutableStateOf(0)
+    }
+    /**
+     * by using the rememberNavController()
+     * we can get the instance of the navController
+     */
+
+//scaffold to hold our bottom navigation Bar
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            NavigationBar {
+                //getting the list of bottom navigation items for our data class
+                bottomNavigationItems().forEachIndexed {index,navigationItem ->
+
+                    //iterating all items with their respective indexes
+                    NavigationBarItem(
+                        selected = index == navigationSelectedItem,
+                        label = {
+                            Text(navigationItem.label)
+                        },
+                        icon = {
+                            Icon(
+                                navigationItem.icon,
+                                contentDescription = navigationItem.label
+                            )
+                        },
+                        onClick = {
+                            navigationSelectedItem = index
+                            navigation.navigate(navigationItem.route) {
+                                popUpTo(navigation.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues = paddingValues)) {
+            cont()
+        }
+    }
 }

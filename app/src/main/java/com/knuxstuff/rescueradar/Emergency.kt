@@ -44,13 +44,16 @@ fun EmergencyScreen() {
                 Icon(
                     ImageVector.vectorResource(R.drawable.emergency),
                     modifier = Modifier.size(256.dp).align(Alignment.CenterHorizontally),
-                    contentDescription = stringResource(R.string.emergency_drawer_icon)
+                    contentDescription = stringResource(R.string.emergency_drawer_icon),
+                    tint = Color.White
+
                 )
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
 
                     text="ALERT",
-                    fontSize = 96.sp
+                    fontSize = 96.sp,
+                    color = Color.White
                 )
             }
         }
