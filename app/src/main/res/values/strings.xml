@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">RescueRadar</string>
-    <string name="emergency_drawer">Emergency Alert</string>
+    <string name="emergency_drawer">Alert</string>
     <string name="emergency_drawer_icon">Emergency Drawer Icon</string>
     <string name="heatmap_drawer">Heatmap</string>
     <string name="heatmap_drawer_icon">Heatmap Icon</string>
-    <string name="report_drawer">Report Danger</string>
-    <string name="history_drawer">Report/Emergency History</string>
+    <string name="report_drawer">Report</string>
+    <string name="history_drawer">History</string>
     <string name="history_drawer_icon">History Icon</string>
-    <string name="settings_drawer"><![CDATA[Account & Settings]]></string>
+    <string name="settings_drawer">Settings</string>
     <string name="report_drawer_icon">Report Icon</string>
     <string name="copyright">Copyright © 2025 RescueRadar</string>
-    <string name="gnucopypasta"><![CDATA["This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>."]]></string>
+    <string name="instant_emergency">Detailed Reporting</string>
+    <string name="detailed_emergency">Immediate Reporting</string>
+    <string name="gnucopypasta" translatable="false"><![CDATA["This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>."]]></string>
 </resources>

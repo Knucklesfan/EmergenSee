@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RescueRadar</string>
+    <string name="emergency_drawer">Alerta de emergencia</string>
+    <string name="emergency_drawer_icon">Icono de cajón de emergencia</string>
+    <string name="heatmap_drawer">Mapa de calor</string>
+    <string name="heatmap_drawer_icon">Icono de mapa de calor</string>
+    <string name="report_drawer">Informar de peligro</string>
+    <string name="history_drawer">Informe/Historial de emergencias</string>
+    <string name="history_drawer_icon">Icono de historia</string>
+    <string name="settings_drawer">Configuraciones de la cuenta</string>
+    <string name="report_drawer_icon">Icono de informe</string>
+    <string name="copyright">Derechos de autor © 2025 RescueRadar</string>
+    <string name="instant_emergency">Informes detallados</string>
+    <string name="detailed_emergency">Informes inmediatos</string>
+</resources>
