@@ -29,6 +29,7 @@ sealed class Screen(val route: String) { //list of all possible screens, and the
 
 } //I LOVE KOTLIN SOOOO MUCH /s
 //Why isn't this an enum? What is the obsession with adding unnecessary complexity? I DONT KNOW.
+//this guy...
 
 @Composable
 fun NavStack(navController: NavHostController) {
