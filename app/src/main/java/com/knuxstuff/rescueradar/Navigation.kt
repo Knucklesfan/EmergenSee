@@ -34,7 +34,7 @@ sealed class Screen(val route: String) { //list of all possible screens, and the
 @Composable
 fun NavStack(navController: NavHostController) {
 
-    NavBar(navigation = navController) {
+    BottomNavBar(navigation = navController) {
         NavHost(navController = navController, startDestination = Screen.Emergency) {
             composable<Screen.Emergency> { EmergencyScreen( /* ... */ ) }
             composable<Screen.Map> { MapScreen( /* ... */ ) }

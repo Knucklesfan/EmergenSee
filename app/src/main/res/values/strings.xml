@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">RescueRadar</string>
-    <string name="emergency_drawer">Emergency Alert</string>
+    <string name="emergency_drawer">Alert</string>
     <string name="emergency_drawer_icon">Emergency Drawer Icon</string>
     <string name="heatmap_drawer">Heatmap</string>
     <string name="heatmap_drawer_icon">Heatmap Icon</string>
-    <string name="report_drawer">Report Danger</string>
-    <string name="history_drawer">Report/Emergency History</string>
+    <string name="report_drawer">Report</string>
+    <string name="history_drawer">History</string>
     <string name="history_drawer_icon">History Icon</string>
-    <string name="settings_drawer"><![CDATA[Account & Settings]]></string>
+    <string name="settings_drawer">Settings</string>
     <string name="report_drawer_icon">Report Icon</string>
     <string name="copyright">Copyright © 2025 RescueRadar</string>
     <string name="instant_emergency">Detailed Reporting</string>
