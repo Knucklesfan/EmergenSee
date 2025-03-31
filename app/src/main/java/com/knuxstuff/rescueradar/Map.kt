@@ -79,7 +79,7 @@ fun MapScreen() {
 fun circle() {
         CircleLayer(
             sourceState = rememberGeoJsonSourceState {
-                data = GeoJSONData(        "https://192.168.68.70:4443/map.geojson"
+                data = GeoJSONData(        "https://server.knuxstuff.com/test.geojson"
                 )
                 cluster = BooleanValue(false)
             }
@@ -94,50 +94,48 @@ fun circle() {
 fun heatmap() {
     HeatmapLayer(
         sourceState = rememberGeoJsonSourceState {
-            data = GeoJSONData(        "https://localhost:4443/map.geojson"
+            data = GeoJSONData(        "https://server.knuxstuff.com/test.geojson"
             )
             cluster = BooleanValue(false)
 
         }
     ) {
         minZoom = LongValue(6)
-        sourceLayer = StringValue("earthquakes")
 // Begin color ramp at 0-stop with a 0-transparancy color
 // to create a blur-like effect.
         heatmapColor = ColorValue(
             interpolate {
                 linear()
-                heatmapWeight
+                get { literal("type") }
                 stop {
                     literal(0)
                     rgba(33.0, 102.0, 172.0, 0.0)
                 }
                 stop {
-                    literal(0.1)
+                    literal(1)
                     rgb(0.0, 255.0, 0.0)
                 }
                 stop {
-                    literal(0.5)
+                    literal(2)
                     rgb(255.0, 255.0, 0.0)
                 }
                 stop {
-                    literal(1)
+                    literal(3)
                     rgb(178.0, 0.0, 0.0)
-                }})
-        heatmapWeight = DoubleValue(
-            interpolate {
-                linear()
-                get { literal("mag") }
+                }
                 stop {
-                    literal(0)
-                    literal(0)
+                    literal(4)
+                    rgb(178.0, 0.0, 0.0)
+                }
+                stop {
+                    literal(5)
+                    rgb(178.0, 0.0, 0.0)
                 }
                 stop {
                     literal(6)
-                    literal(1)
-                }
-            }
-        )
+                    rgb(178.0, 0.0, 0.0)
+                }})
+
 // Increase the heatmap color weight weight by zoom level
 // heatmap-intensity is a multiplier on top of heatmap-weight
         heatmapIntensity = DoubleValue(
