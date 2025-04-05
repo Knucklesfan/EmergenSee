@@ -103,38 +103,38 @@ fun heatmap() {
         minZoom = LongValue(6)
 // Begin color ramp at 0-stop with a 0-transparancy color
 // to create a blur-like effect.
-        heatmapColor = ColorValue(
-            interpolate {
-                linear()
-                get { literal("type") }
-                stop {
-                    literal(0)
-                    rgba(33.0, 102.0, 172.0, 0.0)
-                }
-                stop {
-                    literal(1)
-                    rgb(0.0, 255.0, 0.0)
-                }
-                stop {
-                    literal(2)
-                    rgb(255.0, 255.0, 0.0)
-                }
-                stop {
-                    literal(3)
-                    rgb(178.0, 0.0, 0.0)
-                }
-                stop {
-                    literal(4)
-                    rgb(178.0, 0.0, 0.0)
-                }
-                stop {
-                    literal(5)
-                    rgb(178.0, 0.0, 0.0)
-                }
-                stop {
-                    literal(6)
-                    rgb(178.0, 0.0, 0.0)
-                }})
+//        heatmapColor = ColorValue(
+//            interpolate {
+//                linear()
+//                get { literal("type") }
+//                stop {
+//                    literal(0)
+//                    rgba(33.0, 102.0, 172.0, 0.0)
+//                }
+//                stop {
+//                    literal(1)
+//                    rgb(0.0, 255.0, 0.0)
+//                }
+//                stop {
+//                    literal(2)
+//                    rgb(255.0, 255.0, 0.0)
+//                }
+//                stop {
+//                    literal(3)
+//                    rgb(178.0, 0.0, 0.0)
+//                }
+//                stop {
+//                    literal(4)
+//                    rgb(178.0, 0.0, 0.0)
+//                }
+//                stop {
+//                    literal(5)
+//                    rgb(178.0, 0.0, 0.0)
+//                }
+//                stop {
+//                    literal(6)
+//                    rgb(178.0, 0.0, 0.0)
+//                }})
 
 // Increase the heatmap color weight weight by zoom level
 // heatmap-intensity is a multiplier on top of heatmap-weight
