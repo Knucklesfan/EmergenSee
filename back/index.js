@@ -6,6 +6,7 @@ const port = 3000;
 //this project used sqlite because i dont care
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database('customers.sqlite');
+const registration = require('./registration.js');
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS USER (
@@ -45,18 +46,18 @@ db.serialize(() => {
   })
   
 app.get('/register', (req, res) => { //parameters: register(MEID, IMEI) returns TOKEN
-    db.all("SELECT IMEI FROM USER WHERE IMEI = ?",req.params['IMEI'], function (err, rows) {
+    db.all("SELECT IMEI FROM USER WHERE IMEI = ?",req.query.imei, function (err, rows) {
         if(err){ //if we have an error, just straight up die
           res.status(401).json({"success":"false","error":"access denied."});
           }
           else{ //otherwise, lets see here
-            registerUser(res, db,req.params['IMEI'],req.params['MEID'],rows.length > 0)
+            registration.registerUser(res, db,req.query.imei,req.query.meid,rows.length > 0)
           }
       });
 });
 
 app.get('/alert', (req, res) => {
-    db.all("SELECT TOKEN FROM USER WHERE TOKEN = ?",req.params['token'], function (err, rows) {
+    db.all("SELECT TOKEN FROM USER WHERE TOKEN = ?",req.query['token'], function (err, rows) {
         if(err || rows.length <= 0){
           res.status(401).json({"success":"false","error":"access denied."});
           }
