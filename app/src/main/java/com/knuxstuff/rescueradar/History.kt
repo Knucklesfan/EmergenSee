@@ -14,6 +14,9 @@ import androidx.compose.ui.Alignment
 import kotlinx.coroutines.launch
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
+
 
 // Class that defines the properties of each report
 data class Report(val title: String, val date: String, val location: String)
@@ -23,6 +26,8 @@ fun HistoryScreen() {
 
     // Create a coroutineScope for refreshing the data
     val coroutineScope = rememberCoroutineScope()
+    val backColor = Color(0xFF3d4a70)
+    val bannerColor = Color(0xFFC21A1A)
     // Holds the reports
     var reports by remember { mutableStateOf(sampleReports) }
 
@@ -30,34 +35,102 @@ fun HistoryScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0F7FA))
-            .padding(16.dp)
+            .background(Color(0xFF3d4a70))
     ) {
-        Column {
-            Text(text = "History & Logging", style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif
-            ),
-                modifier = Modifier
-                    .fillMaxWidth()
+        // Main Column
+        Column (
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
 
-                    // Padding Below the Text
-                    .padding(bottom = 16.dp)
-                    // Aligns Center
-                    .wrapContentWidth(Alignment.CenterHorizontally)
-            )
+            Box(
+                modifier = Modifier
+                    .background(bannerColor)
+                    .fillMaxWidth()
+                    .height(70.dp),
+                contentAlignment = Alignment.Center // Centers text below
+            ) {
+                Text(
+                    text = "History & Logging",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Serif,
+                        color = Color.White
+                    )
+                )
+            }
 
             // Adds Vertical Space
             Spacer(modifier = Modifier.height(10.dp))
 
+            // Top of public report tab
+            Box(
+                modifier = Modifier
+                    .background(Color(0xFF7e8ebd))
+                    .padding(16.dp)
+                    .wrapContentSize()
+
+            ) {
+                Text(
+                    text = "Public Reports",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Serif,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
             // Displays List of Reports
-            LazyColumn {
+            LazyColumn (
+                modifier = Modifier
+                    .background(Color(0xFF7e8ebd))
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ){
+
                 // Creates a ReportCard for each report
                 items(reports) { report ->
                     ReportCard(report)
                 }
             }
+
+            // Top of Your report tab (When scrolling is implemented)
+            /*Box(
+                modifier = Modifier
+                    .background(Color(0xFF7e8ebd))
+                    .padding(16.dp)
+                    .wrapContentSize()
+
+            ) {
+                Text(
+                    text = "Your Reports",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Serif,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+            // Displays List of Reports
+            LazyColumn (
+                modifier = Modifier
+                    .background(Color(0xFF7e8ebd))
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ){
+
+                // Creates a ReportCard for each report
+                items(reports) { report ->
+                    ReportCard(report)
+                }
+            }*/
         }
+    }
+
+
 
         // Refreshing report list
         Box(
@@ -80,7 +153,7 @@ fun HistoryScreen() {
             }
         }
     }
-}
+
 
 @Composable
 fun ReportCard(report: Report) {

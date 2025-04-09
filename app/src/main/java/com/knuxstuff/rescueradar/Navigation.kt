@@ -36,7 +36,7 @@ fun NavStack(navController: NavHostController) {
 
     BottomNavBar(navigation = navController) {
         NavHost(navController = navController, startDestination = Screen.Emergency) {
-            composable<Screen.Emergency> { EmergencyScreen( /* ... */ ) }
+            composable<Screen.Emergency> { EmergencyScreen(navController) }
             composable<Screen.Map> { MapScreen( /* ... */ ) }
             composable<Screen.Report> { ReportScreen( /* ... */ ) }
             composable<Screen.History> { HistoryScreen( /* ... */ ) }

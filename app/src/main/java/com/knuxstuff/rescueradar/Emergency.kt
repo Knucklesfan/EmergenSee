@@ -1,5 +1,6 @@
 package com.knuxstuff.rescueradar
 
+import android.graphics.ColorSpace
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -24,13 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun EmergencyScreen() {
-    var backgroundColor by remember { mutableStateOf(Color.White) } // Default background
+fun EmergencyScreen(navigation: NavController) {
+    var backgroundColor by remember { mutableStateOf(Color(0xFF3d4a70)) } // Default background
     val animatedColor by animateColorAsState(
         targetValue = backgroundColor,
         animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing), // Adjust color change speed
@@ -45,7 +51,7 @@ fun EmergencyScreen() {
         .clickable (
             interactionSource = interactionSource,
             indication = null // Hides the button clicking indicator from clicking the background
-        ) { backgroundColor = Color.White }
+        ) { backgroundColor = Color(0xFF3d4a70) }
     ) {
             Column(
                 modifier = Modifier
@@ -60,13 +66,16 @@ fun EmergencyScreen() {
                         .weight(1f)
                         .fillMaxWidth()
                         .padding(vertical = 100.dp)
-                        .shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)
+                        /*.shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)*/
                         .clip(RoundedCornerShape(50.dp)) // Round those corners
                         .background(Color.LightGray) // Placeholder colors
-                        .clickable { backgroundColor = Color.LightGray }, //Will pull up some sort of screen for more detailed reporting
+                        .clickable { backgroundColor = Color.Gray }, //Will pull up some sort of screen for more detailed reporting
                 contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.detailed_emergency), color = Color.White, fontSize = 26.sp)
+                    Text(text = stringResource(R.string.detailed_emergency),
+                        style = TextStyle(color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontSize = 35.sp))
                 }
 
                 // Bottom (Red) Clickable Area
@@ -75,13 +84,20 @@ fun EmergencyScreen() {
                         .weight(2f)
                         .fillMaxWidth()
                         .padding(vertical = 100.dp)
-                        .shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)
-                        .clip(RoundedCornerShape(50.dp)) // Round those corners
-                        .background(Color.Red) // Placeholder colors
-                        .clickable { backgroundColor = Color.Red }, // Will eventually give the user more feedback than just a color change
+                        /*.shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)*/
+                        .clip(RoundedCornerShape(150.dp)) // Round those corners
+                        .background(Color(0xFFC21A1A)) // Placeholder colors
+                        .clickable { backgroundColor = Color(0xFFff3b3b) }, // Will eventually give the user more feedback than just a color change
                     contentAlignment = Alignment.Center
+
                 ) {
-                    Text(text = stringResource(R.string.instant_emergency), color = Color.White, fontSize = 26.sp)
+                    Text(text = stringResource(R.string.instant_emergency),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 40.sp,
+                            fontFamily = FontFamily.Serif,
+                            textAlign = TextAlign.Center)
+                    )
                 }
             }
     }

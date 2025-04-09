@@ -11,6 +11,6 @@
     <string name="settings_drawer">Configuraciones de la cuenta</string>
     <string name="report_drawer_icon">Icono de informe</string>
     <string name="copyright">Derechos de autor © 2025 RescueRadar</string>
-    <string name="instant_emergency">Informes detallados</string>
-    <string name="detailed_emergency">Informes inmediatos</string>
+    <string name="instant_emergency">Emergencia!</string>
+    <string name="detailed_emergency">Informe detallado</string>
 </resources>
