@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +37,8 @@ import androidx.navigation.NavController
 
 @Composable
 fun EmergencyScreen(navigation: NavController) {
-    var backgroundColor by remember { mutableStateOf(Color(0xFF3d4a70)) } // Default background
+    val backgroundShade = MaterialTheme.colors.background //THIS IS SO DUMB!!!
+    var backgroundColor by remember { mutableStateOf(backgroundShade) } // Default background
     val animatedColor by animateColorAsState(
         targetValue = backgroundColor,
         animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing), // Adjust color change speed
@@ -51,7 +53,7 @@ fun EmergencyScreen(navigation: NavController) {
         .clickable (
             interactionSource = interactionSource,
             indication = null // Hides the button clicking indicator from clicking the background
-        ) { backgroundColor = Color(0xFF3d4a70) }
+        ) {  }
     ) {
             Column(
                 modifier = Modifier
@@ -68,14 +70,11 @@ fun EmergencyScreen(navigation: NavController) {
                         .padding(vertical = 100.dp)
                         /*.shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)*/
                         .clip(RoundedCornerShape(50.dp)) // Round those corners
-                        .background(Color.LightGray) // Placeholder colors
+                        .background(MaterialTheme.colors.primary) // Placeholder colors
                         .clickable { backgroundColor = Color.Gray }, //Will pull up some sort of screen for more detailed reporting
                 contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.detailed_emergency),
-                        style = TextStyle(color = Color.Black,
-                            fontFamily = FontFamily.Serif,
-                            fontSize = 35.sp))
+                    Text(text = stringResource(R.string.detailed_emergency), color = Color.White, fontSize = 26.sp)
                 }
 
                 // Bottom (Red) Clickable Area
@@ -85,15 +84,15 @@ fun EmergencyScreen(navigation: NavController) {
                         .fillMaxWidth()
                         .padding(vertical = 100.dp)
                         /*.shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)*/
-                        .clip(RoundedCornerShape(150.dp)) // Round those corners
-                        .background(Color(0xFFC21A1A)) // Placeholder colors
+                        .clip(RoundedCornerShape(50.dp)) // Round those corners
+                        .background(Color.Red) // Placeholder colors
                         .clickable { backgroundColor = Color(0xFFff3b3b) }, // Will eventually give the user more feedback than just a color change
                     contentAlignment = Alignment.Center
 
                 ) {
                     Text(text = stringResource(R.string.instant_emergency),
                         style = TextStyle(
-                            color = Color.Black,
+                            color = Color.White,
                             fontSize = 40.sp,
                             fontFamily = FontFamily.Serif,
                             textAlign = TextAlign.Center)

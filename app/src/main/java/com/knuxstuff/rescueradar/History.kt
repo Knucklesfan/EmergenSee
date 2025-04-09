@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 // Class that defines the properties of each report
 data class Report(val title: String, val date: String, val location: String)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen() {
 
@@ -32,72 +33,47 @@ fun HistoryScreen() {
     var reports by remember { mutableStateOf(sampleReports) }
 
     // Box layout to hold UI
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF3d4a70))
-    ) {
-        // Main Column
-        Column (
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .background(bannerColor)
-                    .fillMaxWidth()
-                    .height(70.dp),
-                contentAlignment = Alignment.Center // Centers text below
-            ) {
-                Text(
-                    text = "History & Logging",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Serif,
-                        color = Color.White
-                    )
-                )
-            }
-
-            // Adds Vertical Space
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Top of public report tab
-            Box(
-                modifier = Modifier
-                    .background(Color(0xFF7e8ebd))
-                    .padding(16.dp)
-                    .wrapContentSize()
-
-            ) {
-                Text(
-                    text = "Public Reports",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Serif,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-                )
-            }
-            // Displays List of Reports
-            LazyColumn (
-                modifier = Modifier
-                    .background(Color(0xFF7e8ebd))
-                    .fillMaxWidth()
-                    .padding(16.dp),
-            ){
-
-                // Creates a ReportCard for each report
-                items(reports) { report ->
-                    ReportCard(report)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = {
+                    Text("History & Logging")
                 }
-            }
+            )
+        },
+    ) { innerPadding ->
+        Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
 
-            // Top of Your report tab (When scrolling is implemented)
-            /*Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer).padding(16.dp)
+                .fillMaxSize()
+                .padding(innerPadding),
+
+        ) {
+            // Main Column
+
+                // Top of public report tab
+
+                    // Displays List of Reports
+                    LazyColumn(
+                        modifier = Modifier
+
+                            .fillMaxWidth()
+                    ) {
+
+                        // Creates a ReportCard for each report
+                        items(reports) { report ->
+                            ReportCard(report)
+                        }
+                    }
+                }
+
+                // Top of Your report tab (When scrolling is implemented)
+                /*Box(
                 modifier = Modifier
                     .background(Color(0xFF7e8ebd))
                     .padding(16.dp)
@@ -127,8 +103,7 @@ fun HistoryScreen() {
                     ReportCard(report)
                 }
             }*/
-        }
-    }
+            }
 
 
 
@@ -152,7 +127,8 @@ fun HistoryScreen() {
                 Icon(Icons.Filled.Refresh, "Refresh history")
             }
         }
-    }
+
+}
 
 
 @Composable
@@ -181,7 +157,31 @@ fun ReportCard(report: Report) {
 val sampleReports = listOf(
     Report("House Fire", "2025-03-01", "Denton, TX"),
     Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+    Report("House Fire", "2025-03-01", "Denton, TX"),
+    Report("Car Accident", "2025-03-02", "Jefferson, TX"),
+
     Report("Robbery", "2025-03-03", "Tyler, TX")
+
 )
 
 

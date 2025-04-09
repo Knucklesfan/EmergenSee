@@ -13,8 +13,12 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,12 +36,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ReportScreen() {
 
-    // The red for the banner color in ARGB format
-    val bannerColor = Color(0xFFC21A1A)
-
-    // The blue for the background in ARGB format
-    val backColor = Color(0xFF3d4a70)
-
     // Mutable variables that default to false
     var isExpanded by remember { mutableStateOf(false) }  // Checks if dropdown is expanded
     var type by remember { mutableStateOf("") } // Holds the value of the dropdown
@@ -46,154 +44,169 @@ fun ReportScreen() {
     var descriptionError by remember { mutableStateOf(false) } // Validates description is filled
     var thankYou by remember { mutableStateOf(false) } // Shows thank you message
 
-    // This is the vertical layout for the page. Everything on page falls under this column
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backColor),
-        horizontalAlignment = Alignment.CenterHorizontally // All child elements are horizontally centered
-    ) {
-        // Banner at the top of page
-        Box(
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = {
+                    Text("Report Danger")
+                }
+            )
+        },
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .background(bannerColor)
-                .fillMaxWidth()
-                .height(70.dp),
-            contentAlignment = Alignment.Center // Centers text below
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally // All child elements are horizontally centered
         ) {
-            Text(
-                text = "Create Report",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif,
-                color = Color.White
-            )
-        }
+//        // Banner at the top of page
+//        Box(
+//            modifier = Modifier
+//                .background(bannerColor)
+//                .fillMaxWidth()
+//                .height(70.dp),
+//            contentAlignment = Alignment.Center // Centers text below
+//        ) {
+//            Text(
+//                text = "Create Report",
+//                fontSize = 30.sp,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = FontFamily.Serif,
+//                color = Color.White
+//            )
+//        }
 
-        // Create space between the banner and the next element
-        Spacer(modifier = Modifier.height(60.dp))
+            // Create space between the banner and the next element
+            Spacer(modifier = Modifier.height(60.dp))
 
-        // Dropdown menu
-        ExposedDropdownMenuBox(
-            expanded = isExpanded,
-            onExpandedChange = { isExpanded = it }
-        ) {
-            TextField(
-                value = type,
-                onValueChange = {},
-                readOnly = true,
-                isError = emergencyError,
-                placeholder = { Text("Type of Emergency") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(0.8f)
-            )
-
-            ExposedDropdownMenu(
+            // Dropdown menu
+            ExposedDropdownMenuBox(
                 expanded = isExpanded,
-                onDismissRequest = { isExpanded = false }
+                onExpandedChange = { isExpanded = it }
             ) {
-                listOf(
-                    "Accident", "Assault", "Crime", "Fire", "Medical", "Natural Disaster", "Other (Specify)"
-                ).forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            type = option
-                            isExpanded = false
-                            emergencyError = false // Clear error if fixed
-                        }
-                    )
+                TextField(
+                    value = type,
+                    onValueChange = {},
+                    readOnly = true,
+                    isError = emergencyError,
+                    placeholder = { Text("Type of Emergency") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                    },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(0.8f)
+                )
+
+                ExposedDropdownMenu(
+                    expanded = isExpanded,
+                    onDismissRequest = { isExpanded = false }
+                ) {
+                    listOf(
+                        "Accident", "Assault", "Crime", "Fire", "Medical", "Natural Disaster", "Other (Specify)"
+                    ).forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                type = option
+                                isExpanded = false
+                                emergencyError = false // Clear error if fixed
+                            }
+                        )
+                    }
                 }
             }
-        }
-        // Show error message below dropdown if not selected when submitted
-        if (emergencyError) {
-            Text(
-                text = "Please select an emergency type",
-                color = Color.Red,
-                fontSize = 15.sp,
+            // Show error message below dropdown if not selected when submitted
+            if (emergencyError) {
+                Text(
+                    text = "Please select an emergency type",
+                    color = Color.Red,
+                    fontSize = 15.sp,
+                    modifier = Modifier
+                        .padding(top = 4.dp, start = 16.dp)
+                        .fillMaxWidth(0.8f)
+                )
+            }
+
+            // Create space between the dropdown and the next element
+            Spacer(modifier = Modifier.height(50.dp))
+
+            // Description TextField
+            TextField(
+                value = description,
+                onValueChange = {
+                    description = it
+                    if (descriptionError && it.isNotBlank()) {
+                        descriptionError = false // Clear error if fixed
+                    }
+                },
+                label = { Text("Description of Emergency") },
+                isError = descriptionError,
                 modifier = Modifier
-                    .padding(top = 4.dp, start = 16.dp)
                     .fillMaxWidth(0.8f)
             )
-        }
+            // Show error message below text box if no description when submitted
+            if (descriptionError) {
+                Text(
+                    text = "Please enter a description",
+                    color = Color.Red,
+                    fontSize = 15.sp,
+                    modifier = Modifier
+                        .padding(top = 4.dp, start = 16.dp)
+                        .fillMaxWidth(0.8f)
+                )
+            }
+            // Create space between the description box and the next element
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Create space between the dropdown and the next element
-        Spacer(modifier = Modifier.height(50.dp))
+            // Submit Button
+            Button(
+                onClick = {
+                    // Check if the type and description are set
+                    val isEmergencyValid = type.isNotBlank()
+                    val isDescriptionValid = description.isNotBlank()
 
-        // Description TextField
-        TextField(
-            value = description,
-            onValueChange = {
-                description = it
-                if (descriptionError && it.isNotBlank()) {
-                    descriptionError = false // Clear error if fixed
-                }
-            },
-            label = { Text("Description of Emergency") },
-            isError = descriptionError,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-        )
-        // Show error message below text box if no description when submitted
-        if (descriptionError) {
-            Text(
-                text = "Please enter a description",
-                color = Color.Red,
-                fontSize = 15.sp,
+                    // Update error states
+                    emergencyError = !isEmergencyValid
+                    descriptionError = !isDescriptionValid
+
+                    if (isEmergencyValid && isDescriptionValid) {
+
+                        // Clear fields after submit
+                        type = ""
+                        description = ""
+
+                        // Show thank you message
+                        thankYou = true
+                    } else {
+                        // Hide thank you if validation fails
+                        thankYou = false
+                    }
+                },
                 modifier = Modifier
-                    .padding(top = 4.dp, start = 16.dp)
-                    .fillMaxWidth(0.8f)
-            )
-        }
-        // Create space between the description box and the next element
-        Spacer(modifier = Modifier.height(16.dp))
+                    .fillMaxWidth(0.5f)
+            ) {
+                Text("Submit")
+            }
+            // Create space between the submit button and the next element
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Submit Button
-        Button(
-            onClick = {
-                // Check if the type and description are set
-                val isEmergencyValid = type.isNotBlank()
-                val isDescriptionValid = description.isNotBlank()
+            // Say thank you to verify submission
+            if (thankYou) {
+                Text(
+                    text = "Thank you for your submission!",
+                    color = Color.Green,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }    }// This is the vertical layout for the page. Everything on page falls under this column
 
-                // Update error states
-                emergencyError = !isEmergencyValid
-                descriptionError = !isDescriptionValid
-
-                if (isEmergencyValid && isDescriptionValid) {
-
-                    // Clear fields after submit
-                    type = ""
-                    description = ""
-
-                    // Show thank you message
-                    thankYou = true
-                } else {
-                    // Hide thank you if validation fails
-                    thankYou = false
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth(0.5f)
-        ) {
-            Text("Submit")
-        }
-        // Create space between the submit button and the next element
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Say thank you to verify submission
-        if (thankYou) {
-            Text(
-                text = "Thank you for your submission!",
-                color = Color.Green,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
-    }
 }
