@@ -9,6 +9,7 @@ function registerUser(res, db, IMEI, MEID, reregister) {
     let time = Date.now();
     // console.log(token)
     console.log(IMEI,MEID);
+
     if(!reregister) {
         db.all("INSERT INTO USER VALUES (?, ?, ?, ?)",[IMEI, MEID, time, token],  function (err, rows) {
             if(err){ //if we have an error, just straight up die

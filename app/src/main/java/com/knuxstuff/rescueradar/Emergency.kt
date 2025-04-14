@@ -1,6 +1,7 @@
 package com.knuxstuff.rescueradar
 
-import android.graphics.ColorSpace
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -24,9 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.Rgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+
 @Composable
 fun EmergencyScreen(navigation: NavController) {
+    val context = LocalContext.current;
     val backgroundShade = MaterialTheme.colors.background //THIS IS SO DUMB!!!
     var backgroundColor by remember { mutableStateOf(backgroundShade) } // Default background
     val animatedColor by animateColorAsState(
@@ -49,11 +51,12 @@ fun EmergencyScreen(navigation: NavController) {
 
 //    val activity = LocalView.current.context as? Activity
     Box(modifier = Modifier
-        .background(animatedColor).fillMaxSize()
-        .clickable (
+        .background(animatedColor)
+        .fillMaxSize()
+        .clickable(
             interactionSource = interactionSource,
             indication = null // Hides the button clicking indicator from clicking the background
-        ) {  }
+        ) { }
     ) {
             Column(
                 modifier = Modifier
@@ -86,7 +89,13 @@ fun EmergencyScreen(navigation: NavController) {
                         /*.shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)*/
                         .clip(RoundedCornerShape(50.dp)) // Round those corners
                         .background(Color.Red) // Placeholder colors
-                        .clickable { backgroundColor = Color(0xFFff3b3b) }, // Will eventually give the user more feedback than just a color change
+                        .clickable {
+                            backgroundColor = Color(0xFFff3b3b)
+                            val intent = Intent(Intent.ACTION_CALL)
+
+                            intent.setData(Uri.parse("tel:19034800945"))
+                            context.startActivity(intent)
+                        }, // Will eventually give the user more feedback than just a color change
                     contentAlignment = Alignment.Center
 
                 ) {
