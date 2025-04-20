@@ -11,7 +11,7 @@ const registration = require('./registration.js');
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS USER (
       IMEI INTEGER PRIMARY KEY,
-      MEID INTEGER,
+      FCMID TEXT,
       REGISTERED INTEGER,
       TOKEN TEXT
     );`)
@@ -44,10 +44,10 @@ db.serialize(() => {
     );`)
 
   })
-  
+//http://127.0.0.1:3000/register?imei=7b3d45eb-1292-4a43-9614-93afca0590aa&meid=35
 app.get('/register', (req, res) => { //parameters: register(MEID, IMEI) returns TOKEN
     db.all("SELECT IMEI FROM USER WHERE IMEI = ?",req.query.imei, function (err, rows) {
-        if(err){ //if we have an error, just straight up die
+        if(err || req.query.imei == undefined){ //if we have an error, just straight up die
           res.status(401).json({"success":"false","error":"access denied."});
           }
           else{ //otherwise, lets see here
@@ -55,19 +55,26 @@ app.get('/register', (req, res) => { //parameters: register(MEID, IMEI) returns 
           }
       });
 });
-
+//http://127.0.0.1:3000/alert?token="7b3d45eb-1292-4a43-9614-93afca0590aa"&lat=15&lon=16&type="stuff"
 app.get('/alert', (req, res) => {
-    db.all("SELECT TOKEN FROM USER WHERE TOKEN = ?",req.query['token'], function (err, rows) {
-        if(err || rows.length <= 0){
-          res.status(401).json({"success":"false","error":"access denied."});
-          }
-          else{
-              res.status(400).json({"success":"true"});
-          }
-      });
+  console.log(req.query['token'])
+  if(req.query['lon'] != undefined && req.query['lat'] != undefined && req.query['type'] != undefined && req.query['token'] != undefined) {
+    db.all("SELECT IMEI FROM USER WHERE TOKEN = ?",req.query['token'], function (err, rows) {
+      if(err || rows.length <= 0){
+
+        res.status(401).json({"success":"false","error":"access denied."});
+      }
+      else{
+        registration.alertAll(res,db, req.query['token'],req.query['lat'],req.query['lon'],req.query['type'],rows[0].IMEI)
+      }
+    });
+
+  }
+  else {
+    res.status(401).json({"success":"false","error":"bad param."});
+  }
   });
 
-app.use(express.static('static'));
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 });

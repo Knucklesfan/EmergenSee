@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.Constants.TAG
 import com.google.firebase.messaging.FirebaseMessaging
 import com.knuxstuff.rescueradar.ui.theme.RescueRadarTheme
+import kotlinx.coroutines.flow.Flow
 
 class MainActivity : ComponentActivity() {
 
@@ -61,7 +62,6 @@ class MainActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        print("HELLO WROLD!!!")
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 val w = Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -76,6 +76,15 @@ class MainActivity : ComponentActivity() {
             Log.d(TAG, msg)
             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
+        FirebaseMessaging.getInstance().subscribeToTopic("fcm_default_channel")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Subscribe failed"
+                }
+                Log.d(TAG, msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
