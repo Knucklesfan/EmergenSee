@@ -1,8 +1,11 @@
 package com.knuxstuff.rescueradar
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
@@ -12,15 +15,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.edit
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -28,7 +32,12 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.Constants.TAG
 import com.google.firebase.messaging.FirebaseMessaging
 import com.knuxstuff.rescueradar.ui.theme.RescueRadarTheme
-import kotlinx.coroutines.flow.Flow
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 class MainActivity : ComponentActivity() {
 
@@ -62,6 +71,45 @@ class MainActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://127.0.0.1:30000")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service: APIService = retrofit.create(APIService::class.java)
+
+//        val potentialToken = this.getSharedPreferences("token",0);
+//        if(potentialToken.getString("token","") == "") {
+//            val deviceID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+//            val response = service.register(deviceID,"").enqueue(object:
+//                Callback<RegistrationResult?> {
+//                override fun onResponse(
+//                    call: Call<RegistrationResult?>,
+//                    response: Response<RegistrationResult?>
+//                ) {
+//                    if(response.isSuccessful) {
+//                        if(response.body()?.success == true) {
+//                            potentialToken.edit {
+//                                putString("token", response.body()?.token ?: "")
+//                                apply()
+//                            }
+//                        }
+//                        else {
+//                            Log.w("NETWORKING",response.body().toString())
+//                        }
+//                    }
+//                    else {
+//                        Log.w("NETWORKING",response.errorBody().toString())
+//                    }
+//                }
+//
+//                override fun onFailure(p0: Call<RegistrationResult?>, p1: Throwable) {
+//                    TODO("Not yet implemented")
+//                }
+//            });
+//        }
+
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 val w = Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -87,7 +135,6 @@ class MainActivity : ComponentActivity() {
             }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             var showNotifPopup by remember { mutableStateOf(showNotif)};
             var showLocPopup by remember { mutableStateOf(showNotif)};
@@ -95,7 +142,7 @@ class MainActivity : ComponentActivity() {
 
             RescueRadarTheme {
                 navController = rememberNavController()
-                NavStack(navController as NavHostController)
+                NavStack(navController as NavHostController, service)
                 if(showNotifPopup) {
                     AlertDialogExample({},{},"HELLO WORLD", "you seem not to have notifs enabled :/")
                 }

@@ -46,6 +46,9 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.firebase.messaging.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.play.services.location)
+    implementation(libs.converter.gson)
     val nav_version = "2.8.7"
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     // Jetpack Compose integration

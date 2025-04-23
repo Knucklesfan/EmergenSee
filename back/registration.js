@@ -26,20 +26,20 @@ function registerUser(res, db, IMEI, MEID, reregister) {
             throw err
             }
             else{ //otherwise, lets see here aaaaa
-                res.status(401).json({"success":"true","reregistered":"false","token":token});
+                res.status(401).json({"success":"true","reregistered":"false","token":token,"error":"none."});
             }
         });
     }
     else { //otherwise, we gotta reregister, and register that the token has been updated
         db.all("UPDATE USER SET token = ?, MEID = ? WHERE IMEI = ?",[token, MEID, IMEI],  function (err, rows) {
             if(err){ //if we have an error, just straight up die
-            res.status(401).json({"success":"false","error":err});
+            res.status(401).json({"success":"false","error":err,"reregistered":"false","token":null});
             throw err
             }
             else{ //otherwise, lets see here a
                 db.all("INSERT INTO USER_REREGISTERED (IMEI, REGISTERED, TOKEN) VALUES (?, ?, ?)",[IMEI, time, token],  function (err, rows) {
                     if(err){ //if we have an error, just straight up die
-                        res.status(401).json({"success":"false","error":err});
+                        res.status(401).json({"success":"false","error":err,"reregistered":"false","token":null});
                     }
                     else{ //otherwise, lets see here a
                         res.status(401).json({"success":"true","reregistered":"true","token":token});
@@ -57,7 +57,7 @@ function alertAll(res, db, token, lon, lat, type,imei) {
         if(err){
             console.log("1")
             console.log(rows)
-            res.status(401).json({"success":"false","error":"error submitting data.","err-type":err});
+            res.status(401).json({"success":"false","error":"error submitting data."});
         }
         else{
             db.all("SELECT last_insert_rowid();",[],  function (err, rows) {

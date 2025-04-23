@@ -48,7 +48,7 @@ db.serialize(() => {
 app.get('/register', (req, res) => { //parameters: register(MEID, IMEI) returns TOKEN
     db.all("SELECT IMEI FROM USER WHERE IMEI = ?",req.query.imei, function (err, rows) {
         if(err || req.query.imei == undefined){ //if we have an error, just straight up die
-          res.status(401).json({"success":"false","error":"access denied."});
+          res.status(401).json({"success":"false","error":"access denied.","reregistered":"false","token":null});
           }
           else{ //otherwise, lets see here
             registration.registerUser(res, db,req.query.imei,req.query.meid,rows.length > 0)

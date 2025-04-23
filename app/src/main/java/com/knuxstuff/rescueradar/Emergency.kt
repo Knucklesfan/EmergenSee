@@ -33,11 +33,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 
 
 @Composable
-fun EmergencyScreen(navigation: NavController) {
+fun EmergencyScreen(apiserv :APIService) {
     val context = LocalContext.current;
     val backgroundShade = MaterialTheme.colors.background //THIS IS SO DUMB!!!
     var backgroundColor by remember { mutableStateOf(backgroundShade) } // Default background
@@ -74,7 +77,9 @@ fun EmergencyScreen(navigation: NavController) {
                         /*.shadow(20.dp, RoundedCornerShape(50.dp)) // Cool shadow effect (It's just drop shadow)*/
                         .clip(RoundedCornerShape(50.dp)) // Round those corners
                         .background(MaterialTheme.colors.primary) // Placeholder colors
-                        .clickable { backgroundColor = Color.Gray }, //Will pull up some sort of screen for more detailed reporting
+                        .clickable {
+                            backgroundColor = Color.Gray;
+                        }, //Will pull up some sort of screen for more detailed reporting
                 contentAlignment = Alignment.Center
                 ) {
                     Text(text = stringResource(R.string.detailed_emergency), color = Color.White, fontSize = 26.sp)
@@ -90,6 +95,54 @@ fun EmergencyScreen(navigation: NavController) {
                         .clip(RoundedCornerShape(50.dp)) // Round those corners
                         .background(Color.Red) // Placeholder colors
                         .clickable {
+                            //                            val lm =
+//                                getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+//                            val location = if (ActivityCompat.checkSelfPermission(
+//                                    this,
+//                                    Manifest.permission.ACCESS_FINE_LOCATION
+//                                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                                    this,
+//                                    Manifest.permission.ACCESS_COARSE_LOCATION
+//                                ) != PackageManager.PERMISSION_GRANTED
+//                            ) {
+//                                // TODO: Consider calling
+//                                //    ActivityCompat#requestPermissions
+//                                // here to request the missing permissions, and then overriding
+//                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                                //                                          int[] grantResults)
+//                                // to handle the case where the user grants the permission. See the documentation
+//                                // for ActivityCompat#requestPermissions for more details.
+//                                return
+//                            } else {
+//
+//                            }
+//                            lm!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+//                            val longitude = location!!.longitude
+//                            val latitude = location!!.latitude
+                            val longitude: Long = 5;
+                            val latitude: Long = 5;
+                            apiserv.alert(
+                                "7b3d45eb-1292-4a43-9614-93afca0590aa",
+                                latitude,
+                                longitude,
+                                "stuff"
+                            )
+                            val thread = Thread {
+                                try {
+                                    val client = OkHttpClient()
+                                    val request: Request = Request.Builder()
+                                        .url("http://192.168.0.52:3000/alert?token=7b3d45eb-1292-4a43-9614-93afca0590aa&lat=15&lon=16&type=\"stuff\"")
+                                        .build()
+
+                                    val call: Call = client.newCall(request)
+                                    val response: Response = call.execute()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+
+                            thread.start()
+
                             backgroundColor = Color(0xFFff3b3b)
                             val intent = Intent(Intent.ACTION_CALL)
 
