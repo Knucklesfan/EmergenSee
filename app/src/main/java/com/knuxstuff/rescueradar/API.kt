@@ -34,6 +34,20 @@ interface APIService {
 //    @GET("register")
 //    fun register(@Query("imei") imei: String, @Query("meid")  meid: String): Call<RegistrationResult?>
     @GET("alert")
-    fun alert(@Query("token") token: String,@Query("lat")  lat: Long, @Query("lon") lon: Long, @Query("type") type: String): Call<AlertResult>
+    fun alert(
+    @Query("token") token: String,
+    @Query("lat")  lat: Long,
+    @Query("lon") lon: Long,
+    @Query("type") type: String):
+        Call<AlertResult>
+
+    @GET("detailed_report")
+    fun sendDetailedReport(
+        @Query("token") token: String,
+        @Query("type") type: String,
+        @Query("description") description: String,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double
+    ): Call<AlertResult>
 
 }

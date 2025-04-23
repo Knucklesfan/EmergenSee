@@ -31,7 +31,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.annotation.SuppressLint
+import android.content.Context
+import android.location.Location
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.location.LocationServices
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
+import java.text.SimpleDateFormat
+import java.util.*
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportScreen() {
@@ -43,7 +54,14 @@ fun ReportScreen() {
     var emergencyError by remember { mutableStateOf(false) } // Validates dropdown is selected
     var descriptionError by remember { mutableStateOf(false) } // Validates description is filled
     var thankYou by remember { mutableStateOf(false) } // Shows thank you message
+    val context = LocalContext.current
+    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    var locationText by remember { mutableStateOf("Fetching location...") }
 
+    // Check if the type and description are set
+    val isEmergencyValid = type.isNotBlank()
+    val isDescriptionValid = description.isNotBlank()
+    val sharedPrefs = context.getSharedPreferences("token", Context.MODE_PRIVATE)
 
     Scaffold(
         topBar = {
@@ -166,25 +184,72 @@ fun ReportScreen() {
             // Create space between the description box and the next element
             Spacer(modifier = Modifier.height(16.dp))
 
+            LaunchedEffect(Unit) {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    @SuppressLint("MissingPermission")
+                    if (location != null) {
+                        locationText = "Lat: %.4f, Lon: %.4f".format(location.latitude, location.longitude)
+                    } else {
+                        locationText = "Location not available"
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            //Your current coordinates text box
+            Text(
+                text = "Your current coordinates",
+                color = Color.Gray,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            //Coordinates text area
+            Text(
+                text = locationText,
+                color = Color.Gray,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+
+            // Create space between the description box and the next element
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Submit Button
             Button(
                 onClick = {
-                    // Check if the type and description are set
-                    val isEmergencyValid = type.isNotBlank()
-                    val isDescriptionValid = description.isNotBlank()
-
                     // Update error states
                     emergencyError = !isEmergencyValid
                     descriptionError = !isDescriptionValid
 
                     if (isEmergencyValid && isDescriptionValid) {
+                        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                            @SuppressLint("MissingPermission")
+                            if (location != null) {
+                                val lat = location.latitude
+                                val lon = location.longitude
+                                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                val sharedPrefs = context.getSharedPreferences("reports", Context.MODE_PRIVATE)
+                                val gson = Gson()
+                                val existingReportsJson = sharedPrefs.getString("history", "[]")
+                                val reportList: MutableList<TestReport> = gson.fromJson(existingReportsJson, Array<TestReport>::class.java).toMutableList()
+                                val report = TestReport(
+                                    title = type,
+                                    description = description,
+                                    date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
+                                    lat = lat,
+                                    lon = lon
+                                )
+                                reportList.add(report)
+                                sharedPrefs.edit().putString("history", gson.toJson(reportList)).apply()
+                                println("Saved report JSON: ${gson.toJson(reportList)}")
 
-                        // Clear fields after submit
-                        type = ""
-                        description = ""
-
-                        // Show thank you message
-                        thankYou = true
+                            }
+                            // Clear fields
+                            type = ""
+                            description = ""
+                            thankYou = true
+                        }
                     } else {
                         // Hide thank you if validation fails
                         thankYou = false

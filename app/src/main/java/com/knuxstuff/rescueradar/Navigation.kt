@@ -35,13 +35,12 @@ sealed class Screen(val route: String) { //list of all possible screens, and the
 fun NavStack(navController: NavHostController, service: APIService) {
 
     BottomNavBar(navigation = navController) {
-        NavHost(navController = navController, startDestination = Screen.Emergency) {
-            composable<Screen.Emergency> { EmergencyScreen(service) }
-            composable<Screen.Map> { MapScreen( /* ... */ ) }
-            composable<Screen.Report> { ReportScreen( /* ... */ ) }
-            composable<Screen.History> { HistoryScreen( /* ... */ ) }
-            composable<Screen.Settings> { SettingsScreen(/* ... */ ) }
-            // Add more destinations eventually...
+        NavHost(navController = navController, startDestination = Screen.Emergency.route) {
+            composable(Screen.Emergency.route) { EmergencyScreen(service, navController) }
+            composable(Screen.Map.route) { MapScreen() }
+            composable(Screen.Report.route) { ReportScreen() }
+            composable(Screen.History.route) { HistoryScreen() }
+            composable(Screen.Settings.route) { SettingsScreen() }
         }
     }
 }

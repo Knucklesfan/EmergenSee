@@ -1,11 +1,7 @@
 package com.knuxstuff.rescueradar
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.Icon
 import android.util.Log
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.SnapSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -17,12 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -50,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 
@@ -186,9 +176,9 @@ fun NavBar(navigation: NavController, cont: @Composable () -> Unit): Unit {
 }
 //initializing the data class with default parameters
 data class navItem(
-    val label : String = "",
-    val icon : ImageVector = Icons.Filled.Home,
-    val route : Screen
+    val label: String = "",
+    val icon: ImageVector = Icons.Filled.Home,
+    val route: String
 ) {
 
     //function to get the list of bottomNavigationItems
@@ -199,27 +189,27 @@ fun bottomNavigationItems() : List<navItem> {
         navItem(
             label = stringResource(R.string.emergency_drawer),
             icon = ImageVector.vectorResource(R.drawable.emergency),
-            route = Screen.Emergency
+            route = Screen.Emergency.route
         ),
         navItem(
             label = stringResource(R.string.heatmap_drawer),
             icon = ImageVector.vectorResource(R.drawable.map),
-            route = Screen.Map
+            route = Screen.Map.route
         ),
         navItem(
             label = stringResource(R.string.report_drawer),
             icon = ImageVector.vectorResource(R.drawable.flag),
-            route = Screen.Report
+            route = Screen.Report.route
         ),
         navItem(
             label = stringResource(R.string.history_drawer),
             icon = ImageVector.vectorResource(R.drawable.history),
-            route = Screen.History
+            route = Screen.History.route
         ),
         navItem(
             label = stringResource(R.string.settings_drawer),
             icon = ImageVector.vectorResource(R.drawable.accounts),
-            route = Screen.Settings
+            route = Screen.Settings.route
         ),
 
         )
@@ -228,9 +218,8 @@ fun bottomNavigationItems() : List<navItem> {
 @Composable
 fun BottomNavBar(navigation: NavController, cont: @Composable () -> Unit) {
 //initializing the default selected item
-    var navigationSelectedItem by remember {
-        mutableStateOf(0)
-    }
+    val navBackStackEntry by navigation.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     /**
      * by using the rememberNavController()
      * we can get the instance of the navController
@@ -246,7 +235,7 @@ fun BottomNavBar(navigation: NavController, cont: @Composable () -> Unit) {
 
                     //iterating all items with their respective indexes
                     NavigationBarItem(
-                        selected = index == navigationSelectedItem,
+                        selected = currentRoute == navigationItem.route,
                         label = {
                             Text(navigationItem.label)
                         },
@@ -257,7 +246,6 @@ fun BottomNavBar(navigation: NavController, cont: @Composable () -> Unit) {
                             )
                         },
                         onClick = {
-                            navigationSelectedItem = index
                             navigation.navigate(navigationItem.route) {
                                 popUpTo(navigation.graph.findStartDestination().id) {
                                     saveState = true

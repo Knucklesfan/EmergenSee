@@ -1,7 +1,9 @@
 package com.knuxstuff.rescueradar
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -33,6 +35,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -40,7 +44,7 @@ import okhttp3.Response
 
 
 @Composable
-fun EmergencyScreen(apiserv :APIService) {
+fun EmergencyScreen(apiserv :APIService, navController: NavController) {
     val context = LocalContext.current;
     val backgroundShade = MaterialTheme.colors.background //THIS IS SO DUMB!!!
     var backgroundColor by remember { mutableStateOf(backgroundShade) } // Default background
@@ -78,7 +82,13 @@ fun EmergencyScreen(apiserv :APIService) {
                         .clip(RoundedCornerShape(50.dp)) // Round those corners
                         .background(MaterialTheme.colors.primary) // Placeholder colors
                         .clickable {
-                            backgroundColor = Color.Gray;
+                            navController.navigate(Screen.Report.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }, //Will pull up some sort of screen for more detailed reporting
                 contentAlignment = Alignment.Center
                 ) {
@@ -143,11 +153,16 @@ fun EmergencyScreen(apiserv :APIService) {
 
                             thread.start()
 
-                            backgroundColor = Color(0xFFff3b3b)
-                            val intent = Intent(Intent.ACTION_CALL)
+                            val sharedPrefs = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
+                            val emergencyNumber = sharedPrefs.getString("emergency_number", null)
 
-                            intent.setData(Uri.parse("tel:19034800945"))
-                            context.startActivity(intent)
+                            if (!emergencyNumber.isNullOrBlank()) {
+                                val intent = Intent(Intent.ACTION_CALL)
+                                intent.data = Uri.parse("tel:$emergencyNumber")
+                                context.startActivity(intent)
+                            } else {
+                                Toast.makeText(context, "Please set an emergency number in Settings", Toast.LENGTH_LONG).show()
+                            }
                         }, // Will eventually give the user more feedback than just a color change
                     contentAlignment = Alignment.Center
 

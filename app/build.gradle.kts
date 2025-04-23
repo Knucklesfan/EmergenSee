@@ -49,10 +49,16 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.play.services.location)
     implementation(libs.converter.gson)
+    implementation(libs.firebase.firestore.ktx)
     val nav_version = "2.8.7"
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // Retrofit build gradle dependencies
+    implementation ("com.squareup.retrofit2:retrofit:$nav_version")
+    implementation ("com.squareup.retrofit2:converter-gson:$nav_version")
 
     // Views/Fragments integration
     implementation("androidx.navigation:navigation-fragment:$nav_version")
