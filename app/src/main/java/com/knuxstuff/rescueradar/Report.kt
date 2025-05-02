@@ -1,5 +1,7 @@
 package com.knuxstuff.rescueradar
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,11 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.location.LocationServices
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportScreen() {
@@ -43,6 +49,14 @@ fun ReportScreen() {
     var emergencyError by remember { mutableStateOf(false) } // Validates dropdown is selected
     var descriptionError by remember { mutableStateOf(false) } // Validates description is filled
     var thankYou by remember { mutableStateOf(false) } // Shows thank you message
+    val context = LocalContext.current
+    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    var locationText by remember { mutableStateOf("Fetching location...") }
+
+    // Check if the type and description are set
+    val isEmergencyValid = type.isNotBlank()
+    val isDescriptionValid = description.isNotBlank()
+    val sharedPrefs = context.getSharedPreferences("token", Context.MODE_PRIVATE)
 
 
     Scaffold(
@@ -163,6 +177,37 @@ fun ReportScreen() {
                         .fillMaxWidth(0.8f)
                 )
             }
+            // Create space between the description box and the next element
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LaunchedEffect(Unit) {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    @SuppressLint("MissingPermission")
+                    if (location != null) {
+                        locationText = "Lat: %.4f, Lon: %.4f".format(location.latitude, location.longitude)
+                    } else {
+                        locationText = "Location not available"
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            //Your current coordinates text box
+            Text(
+                text = "Your current coordinates",
+                color = Color.Gray,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            //Coordinates text area
+            Text(
+                text = locationText,
+                color = Color.Gray,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+
             // Create space between the description box and the next element
             Spacer(modifier = Modifier.height(16.dp))
 
